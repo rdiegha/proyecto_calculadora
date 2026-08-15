@@ -3,13 +3,7 @@
 #Titulo 
 print("======INGRESE NOTAS Y PONDERACIONES======\n")
 
-#Lista de diciconarios para almacenar las notas y ponderaciones
-evaluaciones = []
-
-#Variables necesarias
-continuar = True
-aporte_total = 0
-porcentaje_evaluado = 0
+import json
 
 #Funcion para calcular el aporte 
 def calcular_aporte(nota, ponderacion):
@@ -23,6 +17,31 @@ def calcular_nota_necesaria(aporte_total, porcentaje_evaluado):
     nota_necesaria = round((55 - aporte_total) / porcentaje_restante, 2)
     return nota_necesaria
 
+#Funcion apra guardar las evaluaciones en un archivo .JSON
+def guardar_evaluaciones(evaluaciones):
+    with open("datos.json", "w") as archivo:
+        json.dump(evaluaciones, archivo, indent=4)
+
+#Funcion para cargar las evaluaciones desde un archivo .JSON
+def cargar_evaluaciones():
+    try:
+        with open("datos.json", "r") as archivo:
+            evaluaciones = json.load(archivo)
+            return evaluaciones
+    except FileNotFoundError:
+        return []
+
+#Lista de diciconarios para almacenar las notas y ponderaciones
+evaluaciones = cargar_evaluaciones()
+
+#Variables necesarias
+continuar = True
+aporte_total = 0
+porcentaje_evaluado = 0
+
+#Recuperar el porcentaje evaluado de las evaluaciones cargadas
+for evaluacion in evaluaciones:
+    porcentaje_evaluado += evaluacion["ponderacion"]
 
 #Pedir al usuario nota y ponderacion
 while continuar:
@@ -31,7 +50,7 @@ while continuar:
     while True:
         try:
             nota = int(input("Ingrese la nota: "))
-            if nota < 0 or nota > 100:
+            if nota <= 0 or nota > 100:
                 print("La nota debe estar entre 0 y 100.")
                 continue
             break
@@ -60,6 +79,7 @@ while continuar:
     })
     seguir = input("¿Desea ingresar otra evaluacion? (s/n): ")
     if seguir != "s":
+        guardar_evaluaciones(evaluaciones)
         continuar = False
 
 #Sumar aportes de todas las evaluaciones
