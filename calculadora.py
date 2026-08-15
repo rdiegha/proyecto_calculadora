@@ -31,6 +31,29 @@ def cargar_evaluaciones():
     except FileNotFoundError:
         return []
 
+#Validacion de notas
+def validar_nota(nota):
+    try:
+        nota = int(nota)
+    except ValueError:
+        return False
+    if nota < 0 or nota > 100:
+        return False
+    return True
+
+#Validacion de ponderaciones
+def validar_ponderacion(ponderacion, porcentaje_evaluado):
+    try:
+        ponderacion = int(ponderacion)
+    except ValueError:
+        return False
+    if ponderacion <= 0 or ponderacion > 100:
+        return False
+    if porcentaje_evaluado + ponderacion > 100:
+        return False
+
+    return True
+
 #Lista de diciconarios para almacenar las notas y ponderaciones
 evaluaciones = cargar_evaluaciones()
 
@@ -48,29 +71,21 @@ while continuar:
     evaluacion = input("Ingrese nombre de la evaluacion: ")
     #Validar la nota
     while True:
-        try:
-            nota = int(input("Ingrese la nota: "))
-            if nota <= 0 or nota > 100:
-                print("La nota debe estar entre 0 y 100.")
-                continue
+        nota = input("Ingrese la nota: ")
+        if validar_nota(nota):
+            nota = int(nota)
             break
-        except ValueError:
-            print("Por favor, ingrese un numero valido.")
+        
+        print("Ingrese una nota valida.")
 
     #Validar la ponderacion
     while True:
-        try:
-            ponderacion = int(input("Ingrese la ponderacion (%): "))
-            if ponderacion < 0 or ponderacion > 100:
-                print("La ponderacion debe estar entre 0 y 100.")
-                continue
-            if porcentaje_evaluado + ponderacion > 100:
-                print("El porcentaje evaluado no puede superar el 100%.")
-                continue
-            porcentaje_evaluado += ponderacion
-            break
-        except ValueError:
-            print("Por favor, ingrese un numero valido.")
+            ponderacion = input("Ingrese la ponderacion (%): ")                
+            if validar_ponderacion(ponderacion, porcentaje_evaluado):
+                ponderacion = int(ponderacion)
+                break
+            else:
+                print("Ingrese una ponderacion valida.")
 
     evaluaciones.append({
         "nombre": evaluacion,
