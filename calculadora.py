@@ -75,7 +75,6 @@ while continuar:
         if validar_nota(nota):
             nota = int(nota)
             break
-        
         print("Ingrese una nota valida.")
 
     #Validar la ponderacion
@@ -83,6 +82,7 @@ while continuar:
             ponderacion = input("Ingrese la ponderacion (%): ")                
             if validar_ponderacion(ponderacion, porcentaje_evaluado):
                 ponderacion = int(ponderacion)
+                porcentaje_evaluado += ponderacion
                 break
             else:
                 print("Ingrese una ponderacion valida.")
